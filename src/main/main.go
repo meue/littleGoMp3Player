@@ -8,6 +8,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"sync"
+	"time"
 )
 
 var (
@@ -41,6 +42,7 @@ func playbackLoop() {
 		file := getRandomFile()
 		if file == "" {
 			log.Println("No music files found.")
+			time.Sleep(10 * time.Second)
 			continue
 		}
 
