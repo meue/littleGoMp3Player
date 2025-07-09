@@ -1,0 +1,9 @@
+# mp3 abspielen
+sudo apt install mpg123
+
+# download latest yt-dlp
+sudo curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o yt-dlp
+sudo chmod a+rx yt-dlp
+
+# mp3 converter
+sudo apt install ffmpeg:
