@@ -60,3 +60,5 @@ chmod a+rx src/main/yt-dlp
 
 # mp3 converter
 sudo apt install ffmpeg:
+
+sudo ./install-service.sh
