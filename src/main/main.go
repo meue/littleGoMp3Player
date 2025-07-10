@@ -2,11 +2,13 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"math/rand"
 	"net/http"
 	"os/exec"
 	"path/filepath"
+	"strconv"
 	"sync"
 	"time"
 )
@@ -30,6 +32,7 @@ func main() {
 	http.HandleFunc("/next", nextHandler)
 	http.HandleFunc("/add", addHandler)
 	http.HandleFunc("/list", listHandler)
+	http.HandleFunc("/volume", volumeHandler)
 
 	log.Println("API listening on :8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))
@@ -130,6 +133,23 @@ func listHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(list)
 }
 
+func volumeHandler(w http.ResponseWriter, r *http.Request) {
+	levelStr := r.URL.Query().Get("level")
+	level, err := strconv.Atoi(levelStr)
+	if err != nil || level < 0 || level > 100 {
+		http.Error(w, "Ungültiger Level (0–100)", http.StatusBadRequest)
+		return
+	}
+
+	err = setVolume(level)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	fmt.Fprintf(w, "Lautstärke gesetzt auf %d%%\n", level)
+}
+
 func statusHandler(w http.ResponseWriter, r *http.Request) {
 	mu.Lock()
 	defer mu.Unlock()
@@ -138,4 +158,9 @@ func statusHandler(w http.ResponseWriter, r *http.Request) {
 	} else {
 		json.NewEncoder(w).Encode(map[string]string{"currentTrack": currentTrack, "lastError": ""})
 	}
+}
+
+func setVolume(percent int) error {
+	cmd := exec.Command("amixer", "set", "PCM", fmt.Sprintf("%d%%", percent))
+	return cmd.Run()
 }

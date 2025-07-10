@@ -52,7 +52,7 @@ git --version
 go version
 
 chmod a+rx install.sh
-sudo ./install.sh
+sudo ./install-dependencies.sh
 
 chmod a+rx install-service.sh
 sudo ./install-service.sh

@@ -7,3 +7,6 @@ chmod a+rx src/main/yt-dlp
 
 # mp3 converter
 sudo apt install ffmpeg:
+
+# volume control
+sudo apt install alsa-utils
